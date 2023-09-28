@@ -1,1 +1,1 @@
-# pubkey_fetch
+Ethereum public key fetching page
