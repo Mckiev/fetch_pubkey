@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import FetchButton from './FetchButton';
+import FetchButton from '/FetchButton';
 
 export default function Main() {
   const [recipients, setRecipients] = useState([{ id: 1, address: '', pubkey: '' }]);
