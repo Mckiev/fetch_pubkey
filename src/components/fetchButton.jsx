@@ -1,50 +1,48 @@
-import React from "react"
+import React, { useState, useRef, useEffect } from 'react';
 
-export default function FetchButton() {
-    const handleClick = async () => {
-      const listItems = document.querySelectorAll('#recipientsList li');
-  
-      listItems.forEach(async (item) => {
-        const addrElem = item.querySelector('.wallet--address');
-        const pubkeyElem = item.querySelector('.wallet--pubkey');
-  
-        if (addrElem && pubkeyElem) {
-          const addr = addrElem.value;
-          const publicKey = await getPublicKey(addr);
-          pubkeyElem.value = publicKey;
-        }
-      });
-    };
-  
-    // const getPublicKey = async (addr) => {
-    //     try {
-    //       const response = await fetch(`http://127.0.0.1:5000/getkey/${addr}`);
-    //       console.log('Response:', response);  // Debugging line
-    //       const data = await response.json();
-    //       console.log('Data:', data);  // Debugging line
-    //       return data;
-    //     } catch (error) {
-    //       console.error('An error occurred:', error);
-    //       return null;
-    //     }
-    //   };
-    
-    const getPublicKey = async (addr) => {
-        try {
-          const response = await fetch(`http://127.0.0.1:5000/getkey/${addr}`);
-          if (!response.ok) {
-            throw new Error(`HTTP error ${response.status}`);
-          }
-          const data = await response.json();
-          return data.publicKey; // Accessing the 'publicKey' property
-        } catch (error) {
-          throw error;
-        }
-      };
+export default function FetchButton({ recipient, updateRecipient }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const addrRef = useRef();
+  const pubkeyRef = useRef();
 
+  useEffect(() => {
+    updateRecipient(recipient.id, addrRef.current?.value, pubkeyRef.current?.value);
+  }, [addrRef, pubkeyRef]);
 
-    return (
-      <button onClick={handleClick}>Get Public Keys</button>
-    );
-  }
-  
+  const handleClick = async () => {
+    setIsLoading(true);
+    const addr = addrRef.current.value;
+    try {
+      const publicKey = await getPublicKey(addr);
+      pubkeyRef.current.value = publicKey;
+      updateRecipient(recipient.id, addr, publicKey);
+    } catch (error) {
+      console.error(error);
+    }
+    setIsLoading(false);
+  };
+
+  const getPublicKey = async (addr) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/getkey/${addr}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
+      const data = await response.json();
+      return data.publicKey;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  return (
+    <div>
+      <input type="text" ref={addrRef} className="wallet--address" placeholder="0x..." />
+      <input type="text" ref={pubkeyRef} className="wallet--pubkey" placeholder="Pubkey..." />
+      <div className="button-wrapper">
+        <button onClick={handleClick}>Fetch Public Key</button>
+        {isLoading && <img src="src/assets/loading.gif" alt="loading" className="loading-image" />}
+      </div>
+    </div>
+  );
+}

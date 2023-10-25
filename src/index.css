@@ -36,7 +36,8 @@ main {
   flex-direction: column;
   justify-content: start;
   align-items: start;
-  padding: 0px;
+  padding: 5px;
+  width: 100%;
 }
 
 .div--upload {
@@ -75,7 +76,8 @@ li {
 }
 .wallet--pubkey {
   width: 100%;
-  box-sizing:border-box
+  box-sizing:border-box;
+  margin-bottom:10px;
 }
 
 /* this adds 2px red border on every element */ 
@@ -84,7 +86,37 @@ li {
 } */
 
 button {
-  /* Styles for the Delete button */
-  margin: 10px 10px 0px 0px;
+  align-self: center;
+  height: 30px;
 }
 
+.loading-image {
+  align-self: center;
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+}
+
+
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-image {
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-around; 
+  gap: 10px;
+}
+
+.json-button {
+  margin: 20px;
+  background-color: rgb(127, 255, 155);
+}

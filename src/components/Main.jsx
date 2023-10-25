@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import FetchButton from './fetchButton';
-import Upload from './Upload';
+import FetchButton from './FetchButton';
 
 export default function Main() {
   const [recipients, setRecipients] = useState([{ id: 1, address: '', pubkey: '' }]);
@@ -10,9 +9,33 @@ export default function Main() {
     setRecipients([...recipients, newRecipient]);
   };
 
-  const deleteRecipient = (id) => {
-    const newRecipients = recipients.filter((recipient) => recipient.id !== id);
-    setRecipients(newRecipients);
+  const deleteLastRecipient = () => {
+    setRecipients(recipients.slice(0, -1));
+  };
+
+  const downloadJSON = () => {
+    const pairs = recipients.map(r => ({
+      ethAddress: r.address,
+      publicKey: r.pubkey
+    }));
+    const jsonData = JSON.stringify({ pairs }, null, 2);
+
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'keys.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+  const updateRecipient = (id, address, pubkey) => {
+    setRecipients(prevRecipients =>
+      prevRecipients.map(rec =>
+        rec.id === id ? { ...rec, address, pubkey } : rec
+      )
+    );
   };
 
   return (
@@ -21,17 +44,15 @@ export default function Main() {
       <ol className="recipients" id="recipientsList">
         {recipients.map((recipient, index) => (
           <li key={recipient.id}>
-            <div>
-              <input type="text" className="wallet--address" placeholder="0x..." />
-              <input type="text" className="wallet--pubkey" placeholder="Pubkey..." />
-              <button onClick={() => deleteRecipient(recipient.id)}>Delete recipient</button>
-            </div>
+            <FetchButton recipient={recipient} updateRecipient={updateRecipient} />
           </li>
         ))}
       </ol>
-      <button onClick={addRecipient}>Add Recipient</button>
-      <FetchButton />
-      {/* <Upload /> */}
+      <div className="button-container">
+        <button onClick={addRecipient}>Add Wallet</button>
+        <button onClick={deleteLastRecipient}>Delete Wallet</button>
+      </div>
+      <button className="json-button" onClick={downloadJSON}>Download JSON</button>
     </main>
   );
 }
