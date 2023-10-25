@@ -41,7 +41,7 @@ export default function FetchButton({ recipient, updateRecipient }) {
       <input type="text" ref={pubkeyRef} className="wallet--pubkey" placeholder="Pubkey..." />
       <div className="button-wrapper">
         <button onClick={handleClick}>Fetch Public Key</button>
-        {isLoading && <img src="src/assets/loading.gif" alt="loading" className="loading-image" />}
+        {isLoading && <img src="../src/assets/loading.gif" alt="loading" className="loading-image" />}
       </div>
     </div>
   );
