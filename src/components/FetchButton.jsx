@@ -24,7 +24,7 @@ export default function FetchButton({ recipient, updateRecipient }) {
 
   const getPublicKey = async (addr) => {
     try {
-      const response = await fetch(`http://127.0.0.1:5000/getkey/${addr}`);
+      const response = await fetch(`https://pubkey-fetch-api-605febc84e29.herokuapp.com/getkey/${addr}`);
       if (!response.ok) {
         throw new Error(`HTTP error ${response.status}`);
       }
