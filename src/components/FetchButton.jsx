@@ -5,6 +5,12 @@ export default function FetchButton({ recipient, updateRecipient }) {
   const addrRef = useRef();
   const pubkeyRef = useRef();
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleClick();
+    }
+  };
+
   useEffect(() => {
     updateRecipient(recipient.id, addrRef.current?.value, pubkeyRef.current?.value);
   }, [addrRef, pubkeyRef]);
@@ -37,11 +43,11 @@ export default function FetchButton({ recipient, updateRecipient }) {
 
   return (
     <div>
-      <input type="text" ref={addrRef} className="wallet--address" placeholder="0x..." />
+      <input type="text" ref={addrRef} className="wallet--address" placeholder="0x..." onKeyDown={handleKeyPress}/>
       <input type="text" ref={pubkeyRef} className="wallet--pubkey" placeholder="Pubkey..." />
       <div className="button-wrapper">
         <button onClick={handleClick}>Fetch Public Key</button>
-        {isLoading && <img src="../src/assets/loading.gif" alt="loading" className="loading-image" />}
+        {isLoading && <img src="/loading.gif" alt="loading" className="loading-image" />}
       </div>
     </div>
   );
